@@ -45,7 +45,22 @@ export default function Home() {
     // Load from local storage or defaults
     const saved = localStorage.getItem("radioplay-stations");
     if (saved) {
-      setStations(JSON.parse(saved));
+      const savedStations: Station[] = JSON.parse(saved);
+
+      // Update existing stations with fresh data from DEFAULT_STATIONS (e.g. fixed URLs)
+      const updatedSavedStations = savedStations.map((s) => {
+        const defaultStation = DEFAULT_STATIONS.find((d) => d.id === s.id);
+        return defaultStation ? { ...s, ...defaultStation } : s;
+      });
+      
+      // Check for any new stations in DEFAULT_STATIONS that aren't in savedStations
+      const newDefaults = DEFAULT_STATIONS.filter(
+        (defStation) => !savedStations.some((s) => s.id === defStation.id)
+      );
+
+      const mergedStations = [...updatedSavedStations, ...newDefaults];
+      setStations(mergedStations);
+      localStorage.setItem("radioplay-stations", JSON.stringify(mergedStations));
     } else {
       setStations(DEFAULT_STATIONS);
     }

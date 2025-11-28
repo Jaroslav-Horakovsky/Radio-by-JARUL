@@ -61,8 +61,11 @@ export function StationCard({
   return (
     <div ref={setNodeRef} style={style} className="relative">
       <button
+        {...attributes}
+        {...listeners}
         onClick={handleClick}
         className={`w-full text-left group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 ease-out backdrop-blur-xl hover:scale-105 hover:shadow-2xl hover:shadow-black/50 hover:z-10
+        ${isEditMode ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"}
         ${isError
             ? "border-red-600 bg-red-900/10"
             : isCurrent
@@ -72,9 +75,7 @@ export function StationCard({
         {/* Drag Handle - Only visible in edit mode */}
         {isEditMode && (
           <div
-            {...attributes}
-            {...listeners}
-            className="absolute top-2 left-2 p-2 cursor-grab active:cursor-grabbing bg-zinc-800/70 backdrop-blur-md rounded-lg hover:bg-zinc-700/70 transition-colors z-10"
+            className="absolute top-2 left-2 p-2 bg-zinc-800/70 backdrop-blur-md rounded-lg hover:bg-zinc-700/70 transition-colors z-10"
           >
             <GripVertical size={20} className="text-zinc-400" />
           </div>
@@ -112,7 +113,7 @@ export function StationCard({
 
       {/* Edit Mode Controls */}
       {isEditMode && (
-        <div className="absolute bottom-2 right-2 flex gap-2">
+        <div className="absolute bottom-2 right-2 flex gap-2 z-20">
           {/* Move Up/Down Buttons */}
           <div className="flex flex-col gap-1">
             <button
