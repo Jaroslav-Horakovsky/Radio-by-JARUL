@@ -52,7 +52,7 @@ export default function Home() {
         const defaultStation = DEFAULT_STATIONS.find((d) => d.id === s.id);
         return defaultStation ? { ...s, ...defaultStation } : s;
       });
-      
+
       // Check for any new stations in DEFAULT_STATIONS that aren't in savedStations
       const newDefaults = DEFAULT_STATIONS.filter(
         (defStation) => !savedStations.some((s) => s.id === defStation.id)
@@ -171,14 +171,14 @@ export default function Home() {
       </div>
 
       {/* Grid with Street Art Background - Full Width */}
-      <div className="relative w-full py-16 overflow-hidden">
-        {/* Background Image - Full Viewport Width */}
+      <div className="relative w-full py-16 overflow-hidden min-h-[1500px]">
+        {/* Background Image - Full Viewport Width, Anchored at Top */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/street-art-bg.png"
             alt="Street Art Background"
             fill
-            className="object-cover object-center"
+            className="object-cover object-top"
             priority={false}
           />
           <div className="absolute inset-0 bg-black/5"></div>
@@ -212,18 +212,49 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Historic Brno Image */}
+      {/* Three Images Gallery */}
       <div className="max-w-6xl mx-auto px-8 pb-32">
-        <div className="mt-8 mb-8 relative overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
-          <div className="relative w-full h-48 md:h-64 lg:h-80">
-            <Image
-              src="/images/brno-historic.png"
-              alt="Historické Brno"
-              fill
-              className="object-cover object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
-              priority={false}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <div className="mt-8 mb-8 flex flex-col md:flex-row gap-4">
+          {/* Left Image */}
+          <div className="relative flex-1 overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
+            <div className="relative w-full h-48 md:h-64 lg:h-80">
+              <Image
+                src="/images/brno-left.png"
+                alt="Brno Left"
+                fill
+                className="object-cover object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
+                priority={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            </div>
+          </div>
+
+          {/* Center Image */}
+          <div className="relative flex-1 overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
+            <div className="relative w-full h-48 md:h-64 lg:h-80">
+              <Image
+                src="/images/brno-center.png"
+                alt="Brno Center"
+                fill
+                className="object-contain object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
+                priority={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            </div>
+          </div>
+
+          {/* Right Image */}
+          <div className="relative flex-1 overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
+            <div className="relative w-full h-48 md:h-64 lg:h-80">
+              <Image
+                src="/images/brno-right.png"
+                alt="Brno Right"
+                fill
+                className="object-contain object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
+                priority={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            </div>
           </div>
         </div>
       </div>
