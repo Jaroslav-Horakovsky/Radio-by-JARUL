@@ -42,27 +42,29 @@ export default function Home() {
   );
 
   useEffect(() => {
-    // Load from local storage or defaults
     const saved = localStorage.getItem("radioplay-stations");
-    if (saved) {
-      const savedStations: Station[] = JSON.parse(saved);
+    const initialized = localStorage.getItem("radioplay-initialized");
 
-      // Update existing stations with fresh data from DEFAULT_STATIONS (e.g. fixed URLs)
-      const updatedSavedStations = savedStations.map((s) => {
-        const defaultStation = DEFAULT_STATIONS.find((d) => d.id === s.id);
-        return defaultStation ? { ...s, ...defaultStation } : s;
-      });
-
-      // Check for any new stations in DEFAULT_STATIONS that aren't in savedStations
-      const newDefaults = DEFAULT_STATIONS.filter(
-        (defStation) => !savedStations.some((s) => s.id === defStation.id)
-      );
-
-      const mergedStations = [...updatedSavedStations, ...newDefaults];
-      setStations(mergedStations);
-      localStorage.setItem("radioplay-stations", JSON.stringify(mergedStations));
+    if (!initialized) {
+      if (saved) {
+        // Existující uživatel (upgrade z v0.1.0) - zachovej jeho stanice
+        setStations(JSON.parse(saved));
+        localStorage.setItem("radioplay-initialized", "true");
+      } else {
+        // Nový uživatel - inicializuj defaultní stanice
+        setStations(DEFAULT_STATIONS);
+        localStorage.setItem("radioplay-stations", JSON.stringify(DEFAULT_STATIONS));
+        localStorage.setItem("radioplay-initialized", "true");
+      }
     } else {
-      setStations(DEFAULT_STATIONS);
+      // Flag existuje - načti uložené stanice (bez synchronizace s DEFAULT_STATIONS)
+      if (saved) {
+        setStations(JSON.parse(saved));
+      } else {
+        // Fallback pro případ, že je initialized true, ale stations chybí
+        setStations(DEFAULT_STATIONS);
+        localStorage.setItem("radioplay-stations", JSON.stringify(DEFAULT_STATIONS));
+      }
     }
   }, []);
 
