@@ -66,6 +66,37 @@ export default function Home() {
     }
   }, []);
 
+  // Keyboard shortcuts for edit mode
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't trigger shortcuts if user is typing in an input/textarea
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      // Don't trigger if modal is open
+      if (stationToEdit || stationToDelete) {
+        return;
+      }
+
+      // Ctrl+E (or Cmd+E on Mac) to toggle edit mode ON
+      if ((event.ctrlKey || event.metaKey) && event.key === 'e') {
+        event.preventDefault();
+        setIsEditMode(true);
+      }
+
+      // Esc to turn OFF edit mode
+      if (event.key === 'Escape' && isEditMode) {
+        event.preventDefault();
+        setIsEditMode(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isEditMode, stationToEdit, stationToDelete]);
+
   const saveStations = (updatedStations: Station[]) => {
     setStations(updatedStations);
     localStorage.setItem("radioplay-stations", JSON.stringify(updatedStations));
@@ -106,7 +137,10 @@ export default function Home() {
       const oldIndex = stations.findIndex((s) => s.id === active.id);
       const newIndex = stations.findIndex((s) => s.id === over.id);
 
-      const updated = arrayMove(stations, oldIndex, newIndex);
+      // Swap positions instead of array move
+      const updated = [...stations];
+      [updated[oldIndex], updated[newIndex]] = [updated[newIndex], updated[oldIndex]];
+
       saveStations(updated);
     }
   };
@@ -131,41 +165,28 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       {/* Header with max-width */}
       <div className="max-w-6xl mx-auto px-8 pt-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 my-12">
-          <div className="space-y-3">
+        <div className="flex flex-col items-center justify-center gap-6 my-16">
+          <div className="space-y-6 text-center">
             <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               RadioPlay
             </h1>
-            <div className="flex items-center gap-2">
-              <span className="text-lg text-zinc-500 font-medium tracking-wide">Radio by</span>
-              <span className="text-2xl md:text-3xl font-black bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight animate-pulse">
+            <div className="flex flex-col items-center justify-center gap-3">
+              <span className="text-3xl md:text-4xl text-zinc-400 font-medium tracking-wider">Radio by</span>
+              <span
+                className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tight animate-gradient-text"
+                style={{
+                  background: 'linear-gradient(90deg, #60a5fa, #a78bfa, #ec4899, #f59e0b, #60a5fa)',
+                  backgroundSize: '200% 200%',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 0 40px rgba(168, 139, 250, 0.5), 0 0 80px rgba(96, 165, 250, 0.3)',
+                  filter: 'drop-shadow(0 0 20px rgba(168, 139, 250, 0.6))',
+                }}
+              >
                 JARUL
               </span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsEditMode(!isEditMode)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-colors ${
-                isEditMode
-                  ? "bg-orange-600 hover:bg-orange-700 text-white"
-                  : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
-              }`}
-            >
-              {isEditMode ? (
-                <>
-                  <X size={20} />
-                  Ukončit úpravy
-                </>
-              ) : (
-                <>
-                  <Edit3 size={20} />
-                  Upravit stanice
-                </>
-              )}
-            </button>
-            <AddStationModal onAddStation={handleAddStation} />
           </div>
         </div>
       </div>
@@ -222,7 +243,7 @@ export default function Home() {
                 src="/images/brno-left.png"
                 alt="Brno Left"
                 fill
-                className="object-cover object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
+                className="object-contain object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
                 priority={false}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -256,6 +277,31 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
             </div>
           </div>
+        </div>
+
+        {/* Action Buttons - Moved Below Gallery */}
+        <div className="flex items-center justify-center gap-3 mt-8">
+          <button
+            onClick={() => setIsEditMode(!isEditMode)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-colors ${
+              isEditMode
+                ? "bg-orange-600 hover:bg-orange-700 text-white"
+                : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
+            }`}
+          >
+            {isEditMode ? (
+              <>
+                <X size={20} />
+                Ukončit úpravy
+              </>
+            ) : (
+              <>
+                <Edit3 size={20} />
+                Upravit stanice
+              </>
+            )}
+          </button>
+          <AddStationModal onAddStation={handleAddStation} />
         </div>
       </div>
 
