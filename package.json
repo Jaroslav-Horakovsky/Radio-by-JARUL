@@ -1,6 +1,6 @@
 {
   "name": "radioplay",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "private": true,
   "main": "electron/main.js",
   "scripts": {
@@ -29,7 +29,9 @@
     }
   },
   "dependencies": {
-    "electron-serve": "1.3.0"
+    "electron-serve": "1.3.0",
+    "electron-store": "^8.1.0",
+    "music-metadata": "^11.10.3"
   },
   "devDependencies": {
     "@dnd-kit/core": "^6.3.1",

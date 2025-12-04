@@ -5,11 +5,13 @@ import Image from "next/image";
 import { DEFAULT_STATIONS } from "@/lib/constants";
 import { StationCard } from "@/components/station-card";
 import { PlayerBar } from "@/components/player-bar";
+import { LocalPlaylist } from "@/components/local-playlist";
 import { AddStationModal } from "@/components/add-station-modal";
 import { EditStationModal } from "@/components/edit-station-modal";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { Station } from "@/types/station";
 import { Edit3, X } from "lucide-react";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import {
   DndContext,
   closestCenter,
@@ -32,6 +34,9 @@ export default function Home() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [stationToDelete, setStationToDelete] = useState<Station | null>(null);
   const [stationToEdit, setStationToEdit] = useState<Station | null>(null);
+
+  // ✅ NOVÉ: Aktivace klávesových zkratek
+  useKeyboardShortcuts();
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -235,53 +240,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Three Images Gallery */}
+      {/* ✅ NOVÝ: Local Playlist Section */}
+      <LocalPlaylist />
+
+      {/* Action Buttons - Moved Above Playlist */}
       <div className="max-w-6xl mx-auto px-8 pb-32">
-        <div className="mt-8 mb-8 flex flex-col md:flex-row gap-4">
-          {/* Left Image */}
-          <div className="relative flex-1 overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
-            <div className="relative w-full h-48 md:h-64 lg:h-80">
-              <Image
-                src="/images/brno-left.png"
-                alt="Brno Left"
-                fill
-                className="object-contain object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
-                priority={false}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-            </div>
-          </div>
-
-          {/* Center Image */}
-          <div className="relative flex-1 overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
-            <div className="relative w-full h-48 md:h-64 lg:h-80">
-              <Image
-                src="/images/brno-center.png"
-                alt="Brno Center"
-                fill
-                className="object-contain object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
-                priority={false}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-            </div>
-          </div>
-
-          {/* Right Image */}
-          <div className="relative flex-1 overflow-hidden rounded-2xl border-2 border-zinc-800 bg-zinc-900/50">
-            <div className="relative w-full h-48 md:h-64 lg:h-80">
-              <Image
-                src="/images/brno-right.png"
-                alt="Brno Right"
-                fill
-                className="object-contain object-center opacity-70 hover:opacity-90 transition-opacity duration-500"
-                priority={false}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons - Moved Below Gallery */}
         <div className="flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() => setIsEditMode(!isEditMode)}
