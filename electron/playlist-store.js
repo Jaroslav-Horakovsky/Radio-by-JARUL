@@ -14,7 +14,7 @@ const schema = {
 class PlaylistStore {
   constructor() {
     this.store = new Store({ schema });
-    this.currentVersion = '0.7.3'; // Aktuální verze aplikace
+    this.currentVersion = '0.8.0'; // Aktuální verze aplikace
 
     // Kontrola verze a migrace
     this.checkVersion();

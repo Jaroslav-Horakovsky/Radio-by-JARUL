@@ -165,6 +165,26 @@ export function LocalPlaylist() {
     setIsPlaylistCollapsed(!isPlaylistCollapsed);
   };
 
+  // ✅ NOVÉ v0.8.0: Přehrávání playlistu při dvojkliku
+  const handlePlaylistDoubleClick = (playlistId: string) => {
+    if (editMode) return; // Nefunguje v edit mode
+
+    const playlist = playlists.find(p => p.id === playlistId);
+    if (!playlist || playlist.tracks.length === 0) {
+      console.log('[LocalPlaylist] Playlist is empty, cannot play');
+      return;
+    }
+
+    console.log('[LocalPlaylist] Double click - playing playlist:', playlist.name);
+
+    // Nastav jako aktuální playlist
+    setCurrentPlaylistId(playlistId);
+
+    // Přehraj první skladbu
+    setPlaylistContext(playlist.tracks, 0);
+    playLocalTrack(playlist.tracks[0]);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-8 pb-16">
       <div className="bg-zinc-900/50 rounded-2xl border-2 border-zinc-800 p-6">
@@ -271,11 +291,13 @@ export function LocalPlaylist() {
                 <div key={playlist.id} className="relative group">
                   <button
                     onClick={() => !editMode && setCurrentPlaylistId(playlist.id)}
+                    onDoubleClick={() => handlePlaylistDoubleClick(playlist.id)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
                       currentPlaylistId === playlist.id
                         ? 'bg-blue-600 text-white'
                         : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                     } ${editMode ? 'cursor-default' : 'cursor-pointer'}`}
+                    title={editMode ? '' : 'Dvojklik pro přehrání playlistu'}
                   >
                     <Folder size={16} />
                     {playlist.name}
