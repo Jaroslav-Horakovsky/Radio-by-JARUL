@@ -14,7 +14,7 @@ const schema = {
 class PlaylistStore {
   constructor() {
     this.store = new Store({ schema });
-    this.currentVersion = '0.7.1'; // Aktuální verze aplikace
+    this.currentVersion = '0.7.2'; // Aktuální verze aplikace
 
     // Kontrola verze a migrace
     this.checkVersion();
@@ -24,13 +24,15 @@ class PlaylistStore {
     const storedVersion = this.store.get('appVersion', '0.0.0');
 
     // Pokud je verze starší než 0.7.1, vymaž všechny playlisty pro čistý start
-    if (storedVersion !== this.currentVersion) {
+    if (storedVersion !== this.currentVersion && storedVersion < '0.7.1') {
       console.log(`[PlaylistStore] Migrating from ${storedVersion} to ${this.currentVersion}`);
       console.log('[PlaylistStore] Clearing all playlists for fresh start');
       this.store.set('playlists', []);
       this.store.set('currentPlaylist', null);
-      this.store.set('appVersion', this.currentVersion);
     }
+
+    // Vždy aktualizuj verzi na aktuální
+    this.store.set('appVersion', this.currentVersion);
   }
 
   getPlaylists() {

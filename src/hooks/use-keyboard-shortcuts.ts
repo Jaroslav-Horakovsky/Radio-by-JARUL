@@ -11,6 +11,8 @@ export function useKeyboardShortcuts() {
     seekBackward,
     currentStation,
     currentLocalTrack,
+    playNextTrack,
+    playPreviousTrack,
   } = usePlayer();
 
   useEffect(() => {
@@ -46,7 +48,13 @@ export function useKeyboardShortcuts() {
           break;
 
         case 'ArrowRight':
-          if (currentTrackType === 'local') {
+          if (e.shiftKey && currentTrackType === 'local') {
+            // Shift + → = Další skladba
+            e.preventDefault();
+            playNextTrack();
+            console.log('[KeyboardShortcuts] Shift+Arrow Right: next track');
+          } else if (currentTrackType === 'local') {
+            // Pouze → = Seek +10s
             e.preventDefault();
             seekForward(10);
             console.log('[KeyboardShortcuts] Arrow Right: seek +10s');
@@ -54,7 +62,13 @@ export function useKeyboardShortcuts() {
           break;
 
         case 'ArrowLeft':
-          if (currentTrackType === 'local') {
+          if (e.shiftKey && currentTrackType === 'local') {
+            // Shift + ← = Předchozí skladba
+            e.preventDefault();
+            playPreviousTrack();
+            console.log('[KeyboardShortcuts] Shift+Arrow Left: previous track');
+          } else if (currentTrackType === 'local') {
+            // Pouze ← = Seek -10s
             e.preventDefault();
             seekBackward(10);
             console.log('[KeyboardShortcuts] Arrow Left: seek -10s');
@@ -74,5 +88,5 @@ export function useKeyboardShortcuts() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [volume, currentStation, currentLocalTrack, isPlaying, togglePlay, handleVolumeChange, seekForward, seekBackward]);
+  }, [volume, currentStation, currentLocalTrack, isPlaying, togglePlay, handleVolumeChange, seekForward, seekBackward, playNextTrack, playPreviousTrack]);
 }
