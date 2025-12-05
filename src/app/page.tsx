@@ -243,8 +243,8 @@ export default function Home() {
       {/* ✅ NOVÝ: Local Playlist Section */}
       <LocalPlaylist />
 
-      {/* Action Buttons - Moved Above Playlist */}
-      <div className="max-w-6xl mx-auto px-8 pb-32">
+      {/* Action Buttons - Centered Above Player Bar */}
+      <div className="max-w-6xl mx-auto px-8 pb-48">
         <div className="flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() => setIsEditMode(!isEditMode)}
